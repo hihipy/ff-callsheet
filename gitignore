@@ -1,0 +1,168 @@
+# >>> managed gitignore: begin (gitignore-forge.py) >>>
+# Generated 2026-08-04 22:03 for tabs-2-json.
+# Detected stacks: node, extension.
+# Edits inside this block are overwritten. Put repo-specific rules below it.
+
+# --- macOS -------------------------------------------------------------------
+.DS_Store
+._*
+.AppleDouble
+.AppleDB
+.AppleDesktop
+.LSOverride
+# The next line is "Icon" followed by two carriage returns. Git strips one, and
+# the macOS custom-icon file carries the other. A plain "Icon" line would hide
+# every path with that name. Verify with: grep -c $'Icon\r\r' .gitignore
+Icon
+
+.Spotlight-V100
+.DocumentRevisions-V100
+.TemporaryItems
+.Trashes
+.fseventsd
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.apdisk
+Network Trash Folder
+Temporary Items
+# --- Windows and Linux artifacts ---------------------------------------------
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+*.stackdump
+*.lnk
+.directory
+.Trash-*
+.nfs*
+# --- cloud sync --------------------------------------------------------------
+*.icloud
+.dropbox
+.dropbox.attr
+.dropbox.cache
+# --- editors and IDEs --------------------------------------------------------
+# .vscode/* rather than .vscode/, so the negations below stay reachable. A
+# negation cannot re-include a file whose parent directory is excluded.
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+*.code-workspace
+.idea/
+*.iml
+*.ipr
+*.iws
+.fleet/
+.zed/
+.history/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*.swn
+*~
+Session.vim
+.netrwhist
+.ionide/
+# --- agent and assistant local state -----------------------------------------
+.claude/settings.local.json
+# --- secrets and credentials -------------------------------------------------
+# Deliberately broad. A leaked key costs more than a hidden fixture. Where a
+# repo needs a fixture certificate, add a scoped negation below the block, for
+# example !tests/fixtures/*.pem, which works because tests/fixtures/ is not
+# itself ignored.
+.env
+.env.*
+!.env.example
+!.env.sample
+!.env.template
+*.pem
+*.p12
+*.pfx
+*.keystore
+*.jks
+id_rsa
+id_dsa
+id_ecdsa
+id_ed25519
+*.ppk
+# "*.key" is deliberately absent: Keynote decks are directories named *.key.
+secrets.json
+credentials.json
+service-account*.json
+.secrets/
+# --- local databases and dumps -----------------------------------------------
+*.sqlite
+*.sqlite3
+*.db-journal
+*.db-shm
+*.db-wal
+*.dump
+# --- build noise and scratch -------------------------------------------------
+*.log
+*.tmp
+*.temp
+*.bak
+*.orig
+*.rej
+*.pid
+.tmp/
+.scratch/
+# --- Node and web ------------------------------------------------------------
+node_modules/
+jspm_packages/
+.npm
+# Delete the next two lines in a Yarn zero-installs repo, where .yarn/cache is
+# committed on purpose.
+.yarn/cache/
+.yarn/install-state.gz
+.pnpm-store/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+.eslintcache
+.stylelintcache
+.parcel-cache/
+.cache/
+.next/
+.nuxt/
+.svelte-kit/
+.turbo/
+.vercel/
+.netlify/
+/coverage/
+*.tsbuildinfo
+# --- browser extension packaging ---------------------------------------------
+*.crx
+*.xpi
+web-ext-artifacts/
+# <<< managed gitignore: end <<<
+
+# --- local rules: edit freely, never overwritten -----------------------------
+# Go build output. Root-anchored so a future directory of the same name
+# stays tracked. The binary takes the module name unless -o says otherwise.
+/ff-callsheet
+/callsheet
+*.exe
+*.test
+coverage.out
+coverage.html
+
+# goreleaser output
+dist/
+
+# Cached Sleeper player map. Roughly 5MB, refetched daily, never source.
+.cache/
+players-*.json
+
+# Generated league snapshots. These carry other managers' display names,
+# so they stay out of history even when the league itself is public.
+out/
+
+# lychee link-checker cache (created on CI runners)
+.lycheecache
