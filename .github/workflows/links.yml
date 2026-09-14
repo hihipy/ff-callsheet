@@ -1,0 +1,41 @@
+name: Link Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    # Weekly, so a link that rots between commits still surfaces.
+    - cron: "0 13 * * 1"
+  workflow_dispatch:
+
+jobs:
+  lychee:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Restore lychee cache
+        uses: actions/cache@v4
+        with:
+          path: .lycheecache
+          key: lychee-${{ github.sha }}
+          restore-keys: lychee-
+
+      - name: Check links
+        uses: lycheeverse/lychee-action@v2
+        with:
+          # The accept range replaces the default rather than extending it, so
+          # the success codes have to be listed alongside 403 and 429. Those two
+          # are bot blocks rather than dead links, and keeping them accepted
+          # means a genuinely broken link still fails the run.
+          args: >-
+            --no-progress
+            --cache
+            --max-cache-age 1d
+            --accept 100..=103,200..=299,403,429
+            --exclude-path .git
+            .
+          fail: true

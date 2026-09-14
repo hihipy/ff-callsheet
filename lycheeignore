@@ -1,0 +1,7 @@
+# HTTP/2 negotiation fails against this host from CI runners, which reads as a
+# dead link when the page is fine.
+^https://gemini\.google\.com
+
+# Shields.io badge endpoints are generated images rather than pages, and they
+# rate limit CI runners hard enough to produce noise.
+^https://img\.shields\.io

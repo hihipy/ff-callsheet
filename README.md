@@ -49,10 +49,10 @@ That leaves a single file called `callsheet` in the folder. It has no dependenci
 
 ## Using it
 
-You need your league ID, which sits in the address bar when you open your league on Sleeper. In `https://sleeper.com/leagues/1399955922058547200/team` the ID is the long number.
+You need your league ID, which sits in the address bar when you open your league on Sleeper. In `https://sleeper.com/leagues/123456789012345678/team` the ID is the long number.
 
 ```bash
-./callsheet -out league.md 1399955922058547200
+./callsheet -out league.md 123456789012345678
 ```
 
 That writes `league.md`. Open it, or paste the contents into an AI and ask it something:
@@ -70,8 +70,8 @@ On macOS that file is `~/Library/Application Support/callsheet/config.json`, on 
 ```json
 {
   "leagues": {
-    "seam": { "platform": "sleeper", "id": "1399955922058547200" },
-    "bourbon": { "platform": "sleeper", "id": "1389704249549529088" }
+    "main": { "platform": "sleeper", "id": "123456789012345678" },
+    "dynasty": { "platform": "sleeper", "id": "876543210987654321" }
   },
   "defaults": { "top": 25 }
 }
@@ -80,8 +80,8 @@ On macOS that file is `~/Library/Application Support/callsheet/config.json`, on 
 Then:
 
 ```bash
-./callsheet -out league.md seam
-./callsheet -out reports/ seam bourbon
+./callsheet -out league.md main
+./callsheet -out reports/ main dynasty
 ./callsheet -out reports/
 ```
 
@@ -98,7 +98,7 @@ The tool knows when the season is on. Outside the regular season and playoffs it
 ## What the finished file looks like
 
 ```markdown
-# The Busted Seam PPR League
+# Example Football League
 
 2026 regular, week 1 | 12 teams | sleeper | fetched 2026-09-14 15:53 EDT
 
@@ -110,12 +110,19 @@ Scoring: rec 1 | bonus_rec_te 0.5 | pass_td 4 | pass_int -2
 
 ## Rosters
 
-### cstinnett19
+### Alice
 
 0-0-0 | $100 FAAB left of $100
 
 Starters: Joe Burrow QB CIN (20.9) | Chase Brown RB CIN (17.1) | ...
 Bench: Jonathon Brooks RB CAR (9.9) | Brock Bowers TE LV (Out) | ...
+
+### Bob
+
+0-0-0 | $85 FAAB left of $100
+
+Starters: Josh Allen QB BUF (19.4) | Jahmyr Gibbs RB DET (22.1) | ...
+Bench: Cam Ward QB TEN (16.8) | Greg Dulcich TE MIA (7.3) | ...
 
 ## Free agents
 
