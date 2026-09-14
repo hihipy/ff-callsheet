@@ -1,5 +1,6 @@
 # FF Callsheet
 
+[![Link Check](https://github.com/hihipy/ff-callsheet/actions/workflows/links.yml/badge.svg)](https://github.com/hihipy/ff-callsheet/actions/workflows/links.yml)
 [![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 **Built with**
@@ -13,7 +14,7 @@ FF Callsheet takes a league ID and writes a single document holding every team's
 
 ---
 
-## What problem this solves
+## What Problem This Solves
 
 Ask an AI for fantasy advice and it will happily invent things. It does not know who is on your bench, who your rivals are carrying, what your league does with kickers, or how much waiver money anyone has left. You end up typing all of that out, badly, every week.
 
@@ -23,9 +24,9 @@ It works on any football league Sleeper supports. Standard, PPR, half PPR, two q
 
 ---
 
-## Installing it
+## Installing It
 
-### Step 1: install Go
+### Step 1: Install Go
 
 Go is the programming language this is written in. You need it once, to turn the source code into a program.
 
@@ -35,7 +36,7 @@ Go is the programming language this is written in. You need it once, to turn the
 
 Open a new terminal window afterward and type `go version`. If it prints a version number, you are set.
 
-### Step 2: build the tool
+### Step 2: Build the Tool
 
 ```bash
 git clone https://github.com/hihipy/ff-callsheet.git
@@ -47,7 +48,7 @@ That leaves a single file called `callsheet` in the folder. It has no dependenci
 
 ---
 
-## Using it
+## Using It
 
 You need your league ID, which sits in the address bar when you open your league on Sleeper. In `https://sleeper.com/leagues/123456789012345678/team` the ID is the long number.
 
@@ -61,7 +62,7 @@ That writes `league.md`. Open it, or paste the contents into an AI and ask it so
 
 The first run downloads a list of every NFL player, which takes a few seconds. After that it is cached for a day and runs are quick.
 
-### Saving your leagues
+### Saving Your Leagues
 
 Typing a twenty digit number gets old. You can save short names for your leagues instead, in a file the tool looks for on its own.
 
@@ -89,13 +90,13 @@ The last one exports every league you have saved. When you export more than one,
 
 The config file is optional. Everything works with a bare league ID, so nothing has to be set up before the first run.
 
-### Running it every week
+### Running It Every Week
 
 The tool knows when the season is on. Outside the regular season and playoffs it writes nothing and exits quietly, so a scheduled job is safe to leave running all year. Point a weekly cron job or scheduled task at it and it will start producing files again in September on its own.
 
 ---
 
-## What the finished file looks like
+## What the Finished File Looks Like
 
 ```markdown
 # Example Football League
@@ -140,9 +141,9 @@ The number in parentheses is this week's projection, in your league's own scorin
 
 ---
 
-## All the options
+## All the Options
 
-| Flag | What it does |
+| Flag | What It Does |
 | --- | --- |
 | `-out` | Where to write. A filename for one league, a folder for several. Prints to the screen if left out |
 | `-top` | How many free agents to list per position. Defaults to 25 |
@@ -155,7 +156,7 @@ Flags go before the league names, not after.
 
 ---
 
-## Things it cannot do
+## Things It Cannot Do
 
 **It cannot make moves for you.** Sleeper's public interface is read only. This can tell you to bid $14 on a running back, and you still place the bid yourself in the app. That is a limit of the platform, not a feature waiting to be written.
 
@@ -167,7 +168,7 @@ Flags go before the league names, not after.
 
 ---
 
-## For developers
+## For Developers
 
 Written in Go with nothing outside the standard library.
 
