@@ -223,3 +223,27 @@ func bucketHas(list []callsheet.Player, name string) bool {
 	}
 	return false
 }
+
+func TestBenchExcludesReserveAndTaxi(t *testing.T) {
+	lg, _ := fetchFixture(t, nil)
+	for _, team := range lg.Teams {
+		seen := map[string]string{}
+		for _, group := range []struct {
+			label string
+			list  []callsheet.Player
+		}{
+			{"starters", team.Starters}, {"bench", team.Bench},
+			{"reserve", team.Reserve}, {"taxi", team.Taxi},
+		} {
+			for _, p := range group.list {
+				if p.ID == "0" {
+					continue
+				}
+				if prev, dup := seen[p.ID]; dup {
+					t.Errorf("%s: %s appears in both %s and %s", team.Manager, p.Name, prev, group.label)
+				}
+				seen[p.ID] = group.label
+			}
+		}
+	}
+}

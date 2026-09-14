@@ -121,13 +121,18 @@ func (p Provider) Fetch(ctx context.Context, ref callsheet.Ref, opts callsheet.O
 		if manager == "" {
 			manager = "(unclaimed team)"
 		}
-		starting := make(map[string]bool, len(r.Starters))
-		for _, id := range r.Starters {
-			starting[id] = true
+		// The bench is whoever is left. Sleeper keeps injured and taxi players
+		// in the players array as well as in their own, so subtracting only the
+		// starters lists them twice.
+		placed := make(map[string]bool, len(r.Starters)+len(r.Reserve)+len(r.Taxi))
+		for _, group := range [][]string{r.Starters, r.Reserve, r.Taxi} {
+			for _, id := range group {
+				placed[id] = true
+			}
 		}
 		var bench []string
 		for _, id := range r.Players {
-			if !starting[id] {
+			if !placed[id] {
 				bench = append(bench, id)
 			}
 		}
