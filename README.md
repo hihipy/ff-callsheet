@@ -50,10 +50,10 @@ That leaves a single file called `callsheet` in the folder. It has no dependenci
 
 ## Using It
 
-You need your league ID, which sits in the address bar when you open your league on Sleeper. In `https://sleeper.com/leagues/123456789012345678/team` the ID is the long number.
+You need your league ID, which sits in the address bar when you open your league on Sleeper. In `https://sleeper.com/leagues/YOUR_LEAGUE_ID/team` it is the long number in the middle.
 
 ```bash
-./callsheet -out league.md 123456789012345678
+./callsheet -out league.md YOUR_LEAGUE_ID
 ```
 
 That writes `league.md`. Open it, or paste the contents into an AI and ask it something:
@@ -71,8 +71,8 @@ On macOS that file is `~/Library/Application Support/callsheet/config.json`, on 
 ```json
 {
   "leagues": {
-    "main": { "platform": "sleeper", "id": "123456789012345678" },
-    "dynasty": { "platform": "sleeper", "id": "876543210987654321" }
+    "main": { "platform": "sleeper", "id": "YOUR_LEAGUE_ID" },
+    "dynasty": { "platform": "sleeper", "id": "ANOTHER_LEAGUE_ID" }
   },
   "defaults": { "top": 25 }
 }
