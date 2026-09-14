@@ -11,23 +11,34 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # The tool writes files and reads a cache directory, and those differ
-        # per platform, so all three are exercised rather than assumed.
+        # The tool writes files and reads a per-platform cache directory, so
+        # all three are exercised rather than assumed.
         os: [ubuntu-latest, macos-latest, windows-latest]
+    defaults:
+      run:
+        # Windows runners default to PowerShell, which parses native command
+        # arguments differently and split -coverprofile=coverage.out into two.
+        # Pinning bash makes every platform run the same command.
+        shell: bash
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
           go-version: stable
+
       - name: Format
         if: runner.os == 'Linux'
         run: test -z "$(gofmt -l .)"
+
       - name: Vet
         run: go vet ./...
+
       - name: Test
         run: go test -race -coverprofile=coverage.out ./...
+
       - name: Coverage
         if: runner.os == 'Linux'
         run: go tool cover -func=coverage.out | tail -1
+
       - name: Build
         run: go build ./...

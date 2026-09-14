@@ -1,0 +1,9 @@
+# Line endings are normalized to LF on checkout everywhere, including Windows.
+# Without this, git hands the Windows runner a golden file with CRLF endings
+# while the renderer emits LF, and the golden test fails on a difference no
+# reader can see.
+* text=auto eol=lf
+
+# Test fixtures are compared byte for byte, so they are never rewritten.
+internal/render/testdata/** -text
+internal/provider/sleeper/testdata/** -text

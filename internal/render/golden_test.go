@@ -4,6 +4,7 @@ import (
 	"flag"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 	"time"
 
@@ -89,12 +90,17 @@ func TestGoldenMarkdown(t *testing.T) {
 		return
 	}
 
-	want, err := os.ReadFile(path)
+	raw, err := os.ReadFile(path)
 	if err != nil {
 		t.Fatalf("%v (run: go test ./internal/render -update)", err)
 	}
-	if got != string(want) {
-		t.Errorf("output drifted from testdata/golden.md\n--- got ---\n%s\n--- want ---\n%s", got, want)
+	// A checkout that rewrote line endings would otherwise fail this test on a
+	// difference nothing prints. .gitattributes should prevent that, and this
+	// keeps a misconfigured clone from looking like a rendering bug.
+	want := strings.ReplaceAll(string(raw), "\r\n", "\n")
+	if got != want {
+		t.Errorf("output drifted from testdata/golden.md\nfirst difference at byte %d\n--- got ---\n%q\n--- want ---\n%q",
+			firstDiff(got, want), excerpt(got, firstDiff(got, want)), excerpt(want, firstDiff(got, want)))
 	}
 }
 
@@ -122,4 +128,39 @@ func contains(haystack, needle string) bool {
 		}
 		return false
 	})()
+}
+
+// firstDiff reports where two renderings part company, so a failure names a
+// position rather than printing two walls of text that look the same.
+func firstDiff(a, b string) int {
+	n := len(a)
+	if len(b) < n {
+		n = len(b)
+	}
+	for i := 0; i < n; i++ {
+		if a[i] != b[i] {
+			return i
+		}
+	}
+	if len(a) != len(b) {
+		return n
+	}
+	return -1
+}
+
+// excerpt quotes a window around an offset, with %q making invisible
+// characters visible.
+func excerpt(s string, at int) string {
+	if at < 0 {
+		return ""
+	}
+	start := at - 40
+	if start < 0 {
+		start = 0
+	}
+	end := at + 40
+	if end > len(s) {
+		end = len(s)
+	}
+	return s[start:end]
 }
