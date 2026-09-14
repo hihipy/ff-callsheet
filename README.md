@@ -20,7 +20,7 @@ Ask an AI for fantasy advice and it will happily invent things. It does not know
 
 This writes it out for you. One command produces a file about nine kilobytes long, small enough to paste anywhere, that answers all of those questions at once. What you get back stops being generic advice and starts being about your actual league.
 
-It works on any football league Sleeper supports. Standard, PPR, half PPR, two quarterback, superflex, dynasty with taxi squads, leagues with defensive players, leagues with no kicker. The tool reads your league's own settings rather than assuming a format.
+It works on any football league [Sleeper](https://sleeper.com) supports. Standard, PPR, half PPR, two quarterback, superflex, dynasty with taxi squads, leagues with defensive players, leagues with no kicker. The tool reads your league's own settings rather than assuming a format.
 
 ---
 
@@ -158,11 +158,11 @@ Flags go before the league names, not after.
 
 ## Things It Cannot Do
 
-**It cannot make moves for you.** Sleeper's public interface is read only. This can tell you to bid $14 on a running back, and you still place the bid yourself in the app. That is a limit of the platform, not a feature waiting to be written.
+**It cannot make moves for you.** Sleeper's [public API](https://docs.sleeper.com) is read only. This can tell you to bid $14 on a running back, and you still place the bid yourself in the app. That is a limit of the platform, not a feature waiting to be written.
 
-**Projections are borrowed.** They come from an endpoint Sleeper publishes but does not document, so it may change without warning. When it does, the file still gets written and says at the top that it fell back to preseason ranking.
+**Projections are borrowed.** They come from an endpoint Sleeper publishes but does not document, so it may change without warning. If you notice it has, [open an issue](https://github.com/hihipy/ff-callsheet/issues). When it does, the file still gets written and says at the top that it fell back to preseason ranking.
 
-**It is Sleeper only today.** Yahoo support is planned, and the code is already split so that a second platform is a new folder rather than a rewrite. If you want to try it yourself, `docs/adding-a-provider.md` explains what is involved.
+**It is Sleeper only today.** Yahoo support is planned, and the code is already split so that a second platform is a new folder rather than a rewrite. If you want to try it yourself, [docs/adding-a-provider.md](docs/adding-a-provider.md) explains what is involved.
 
 **Free agent counts include practice squad players.** The tool separates them out and tells you how many of each, but the total is larger than the set of players who realistically matter.
 
@@ -187,13 +187,13 @@ go test ./...
 go test -race ./...
 ```
 
-Everything runs offline against fixtures, including the network paths. `docs/testing.md` covers how that works and how to regenerate the golden output file.
+Everything runs offline against fixtures, including the network paths. [docs/testing.md](docs/testing.md) covers how that works and how to regenerate the golden output file.
 
 ---
 
 ## License
 
-This project is licensed under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
+This project is licensed under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/). The full text is in [LICENSE.md](LICENSE.md).
 
 - **Attribution.** Credit the original work.
 - **NonCommercial.** No commercial use.
