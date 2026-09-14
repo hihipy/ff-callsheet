@@ -13,7 +13,7 @@ import (
 // or stale. The cache lives with other throwaway data rather than with config,
 // because losing it costs a refetch and nothing else.
 func (p Provider) loadPlayers(ctx context.Context, sport string) (map[string]player, error) {
-	path, err := cachePath(sport)
+	path, err := p.cachePath(sport)
 	if err != nil {
 		return nil, err
 	}
@@ -31,7 +31,7 @@ func (p Provider) loadPlayers(ctx context.Context, sport string) (map[string]pla
 	}
 
 	p.logf("fetching the %s player map, roughly 5MB, once a day", sport)
-	raw, err := p.http.getBytes(ctx, fmt.Sprintf("%s/players/%s", apiBase, sport))
+	raw, err := p.http.getBytes(ctx, fmt.Sprintf("%s/players/%s", p.urls.api, sport))
 	if err != nil {
 		return nil, err
 	}
@@ -49,10 +49,15 @@ func (p Provider) loadPlayers(ctx context.Context, sport string) (map[string]pla
 	return m, nil
 }
 
-func cachePath(sport string) (string, error) {
-	dir, err := os.UserCacheDir()
-	if err != nil {
-		return "", err
+func (p Provider) cachePath(sport string) (string, error) {
+	dir := p.CacheDir
+	if dir == "" {
+		var err error
+		dir, err = os.UserCacheDir()
+		if err != nil {
+			return "", err
+		}
+		dir = filepath.Join(dir, "callsheet")
 	}
-	return filepath.Join(dir, "callsheet", "players-"+sport+".json"), nil
+	return filepath.Join(dir, "players-"+sport+".json"), nil
 }

@@ -1,0 +1,20 @@
+[
+  {
+    "roster_id": 2,
+    "owner_id": "u2",
+    "starters": ["p1", "0"],
+    "players": ["p1", "p2"],
+    "reserve": ["p3"],
+    "taxi": null,
+    "settings": {"wins": 1, "losses": 0, "ties": 0, "waiver_budget_used": 30, "waiver_position": 4}
+  },
+  {
+    "roster_id": 1,
+    "owner_id": "u1",
+    "starters": ["p4"],
+    "players": ["p4"],
+    "reserve": null,
+    "taxi": ["p5"],
+    "settings": {"wins": 0, "losses": 1, "ties": 0, "waiver_budget_used": 0, "waiver_position": 1}
+  }
+]

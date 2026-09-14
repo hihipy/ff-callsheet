@@ -33,6 +33,18 @@ func newHTTPClient() httpClient {
 	return httpClient{c: &http.Client{Timeout: 60 * time.Second}}
 }
 
+// endpoints names the two hosts this provider reads. They are fields rather
+// than constants so a test can point the whole provider at a local server and
+// exercise Fetch for real, rather than only its pure parts.
+type endpoints struct {
+	api  string
+	proj string
+}
+
+func defaultEndpoints() endpoints {
+	return endpoints{api: apiBase, proj: projBase}
+}
+
 func (h httpClient) getJSON(ctx context.Context, url string, into any) error {
 	body, err := h.getBytes(ctx, url)
 	if err != nil {

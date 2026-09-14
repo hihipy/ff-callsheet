@@ -176,6 +176,11 @@ func slug(lg callsheet.League) string {
 			return -1
 		}
 	}, lg.Name)
+	// Dropped punctuation can leave runs of separators behind, so "A !!! / B"
+	// does not become "a----b".
+	for strings.Contains(name, "--") {
+		name = strings.ReplaceAll(name, "--", "-")
+	}
 	name = strings.Trim(name, "-")
 	if name == "" {
 		name = lg.Ref.ID

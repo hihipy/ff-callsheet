@@ -65,7 +65,7 @@ func (p Provider) fetchProjections(ctx context.Context, sport, season string, we
 		q.WriteString(pos)
 	}
 	url := fmt.Sprintf("%s/projections/%s/%s/%d?season_type=regular%s&order_by=%s",
-		projBase, sport, season, week, q.String(), pr.key)
+		p.urls.proj, sport, season, week, q.String(), pr.key)
 
 	raw, err := p.http.getBytes(ctx, url)
 	if err != nil {

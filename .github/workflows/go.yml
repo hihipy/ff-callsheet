@@ -7,17 +7,27 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # The tool writes files and reads a cache directory, and those differ
+        # per platform, so all three are exercised rather than assumed.
+        os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
           go-version: stable
-      - name: Format check
+      - name: Format
+        if: runner.os == 'Linux'
         run: test -z "$(gofmt -l .)"
       - name: Vet
         run: go vet ./...
       - name: Test
-        run: go test ./...
+        run: go test -race -coverprofile=coverage.out ./...
+      - name: Coverage
+        if: runner.os == 'Linux'
+        run: go tool cover -func=coverage.out | tail -1
       - name: Build
         run: go build ./...

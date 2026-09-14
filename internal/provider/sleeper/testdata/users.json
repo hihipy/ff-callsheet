@@ -1,0 +1,4 @@
+[
+  {"user_id": "u1", "display_name": "alice", "metadata": {"team_name": "Alice's Team"}},
+  {"user_id": "u2", "display_name": "bob", "metadata": {}}
+]

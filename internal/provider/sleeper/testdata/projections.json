@@ -1,0 +1,8 @@
+[
+  {"player_id": "p1", "team": "KC", "stats": {"pts_ppr": 21.5, "pts_half_ppr": 19.0}},
+  {"player_id": "p2", "team": "SF", "stats": {"pts_ppr": 11.0}},
+  {"player_id": "p4", "team": "BUF", "stats": {"pts_ppr": 19.25}},
+  {"player_id": "f1", "team": "DAL", "stats": {"pts_ppr": 8.5}},
+  {"player_id": "f3", "team": "SF", "stats": {"pts_ppr": 1.5}},
+  {"player_id": "DAL", "team": "DAL", "stats": {"pts_ppr": 7.0}}
+]

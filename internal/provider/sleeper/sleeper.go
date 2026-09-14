@@ -13,13 +13,17 @@ import (
 // Provider implements callsheet.Provider against Sleeper.
 type Provider struct {
 	http httpClient
+	urls endpoints
 	// Log receives progress and warnings. Nil discards them.
 	Log io.Writer
+	// CacheDir overrides where the player map is cached. Empty uses the
+	// user cache directory, which is what a real run wants.
+	CacheDir string
 }
 
 // New returns a Provider writing diagnostics to log, which may be nil.
 func New(log io.Writer) Provider {
-	return Provider{http: newHTTPClient(), Log: log}
+	return Provider{http: newHTTPClient(), urls: defaultEndpoints(), Log: log}
 }
 
 func (p Provider) Name() string { return "sleeper" }
@@ -50,7 +54,7 @@ func (p Provider) Fetch(ctx context.Context, ref callsheet.Ref, opts callsheet.O
 		users   []user
 		st      state
 	)
-	base := fmt.Sprintf("%s/league/%s", apiBase, ref.ID)
+	base := fmt.Sprintf("%s/league/%s", p.urls.api, ref.ID)
 	if err := p.http.getJSON(ctx, base, &lg); err != nil {
 		return callsheet.League{}, err
 	}
@@ -60,7 +64,7 @@ func (p Provider) Fetch(ctx context.Context, ref callsheet.Ref, opts callsheet.O
 	if err := p.http.getJSON(ctx, base+"/users", &users); err != nil {
 		return callsheet.League{}, err
 	}
-	if err := p.http.getJSON(ctx, fmt.Sprintf("%s/state/%s", apiBase, sport), &st); err != nil {
+	if err := p.http.getJSON(ctx, fmt.Sprintf("%s/state/%s", p.urls.api, sport), &st); err != nil {
 		return callsheet.League{}, err
 	}
 	players, err := p.loadPlayers(ctx, sport)
@@ -157,7 +161,10 @@ func (p Provider) Fetch(ctx context.Context, ref callsheet.Ref, opts callsheet.O
 			slotted++
 		}
 	}
-	p.logf("pool: %d available, %d on a club depth chart, %d dropped as not currently listed",
+	// This count spans every position Sleeper tracks, including linemen and
+	// kickers a league may not field. The document's own count is smaller,
+	// because position filtering happens against the league's slots.
+	p.logf("pool: %d unrostered and currently listed at any position, %d on a club depth chart, %d excluded",
 		len(out.Pool), slotted, dropped)
 
 	return out, nil
