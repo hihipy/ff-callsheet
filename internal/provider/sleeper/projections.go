@@ -35,16 +35,20 @@ var nflTeams = []string{
 	"TEN", "WAS",
 }
 
-// pointsKey picks the projection field matching the league's own scoring, so a
-// full PPR league is never handed half PPR numbers.
-func pointsKey(scoring map[string]float64) string {
-	switch scoring["rec"] {
-	case 1:
-		return "pts_ppr"
-	case 0.5:
-		return "pts_half_ppr"
+// pointsKey picks the projection field closest to the league's own scoring.
+// Sleeper publishes three, so a league scoring anything other than 0 or 0.5 or
+// 1 per reception gets the nearest one rather than a silent fall through to
+// standard. The second return reports whether the match was exact, because a
+// 1.5 PPR league deserves to be told its numbers are an approximation.
+func pointsKey(scoring map[string]float64) (key string, exact bool) {
+	rec := scoring["rec"]
+	switch {
+	case rec >= 0.75:
+		return "pts_ppr", rec == 1
+	case rec >= 0.25:
+		return "pts_half_ppr", rec == 0.5
 	default:
-		return "pts_std"
+		return "pts_std", rec == 0
 	}
 }
 
@@ -53,10 +57,15 @@ func pointsKey(scoring map[string]float64) string {
 func (p Provider) fetchProjections(ctx context.Context, sport, season string, week int,
 	scoring map[string]float64, positions []string, playerTeam map[string]string) projections {
 
+	key, exact := pointsKey(scoring)
 	pr := projections{
 		points: map[string]float64{},
 		onBye:  map[string]bool{},
-		key:    pointsKey(scoring),
+		key:    key,
+	}
+	if !exact {
+		p.logf("warning: league scores %g per reception, which Sleeper does not project; using %s as the nearest",
+			scoring["rec"], key)
 	}
 
 	var q strings.Builder

@@ -97,3 +97,26 @@ func TestInSeasonStopCondition(t *testing.T) {
 		}
 	}
 }
+
+func TestOrderingIsDeterministicForTiedPlayers(t *testing.T) {
+	// Two different players share a name, and neither is ranked or projected.
+	// Every sort key ties except the ID, which has to settle it the same way
+	// on every run.
+	l := League{
+		Slots: []string{"RB", "BN"},
+		Pool: []Player{
+			{ID: "b", Name: "Same Name", Position: "RB", Rank: UnrankedRank},
+			{ID: "a", Name: "Same Name", Position: "RB", Rank: UnrankedRank},
+		},
+	}
+	for i := 0; i < 50; i++ {
+		pool, _ := l.PoolByPosition()
+		if pool["RB"][0].ID != "a" {
+			t.Fatalf("run %d put %s first", i, pool["RB"][0].ID)
+		}
+		ranked := ByRank(l.Pool)
+		if ranked[0].ID != "a" {
+			t.Fatalf("ByRank run %d put %s first", i, ranked[0].ID)
+		}
+	}
+}

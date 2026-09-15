@@ -111,7 +111,13 @@ func (l League) PoolByPosition() (map[string][]Player, []string) {
 			if list[i].Rank != list[j].Rank {
 				return list[i].Rank < list[j].Rank
 			}
-			return list[i].Name < list[j].Name
+			if list[i].Name != list[j].Name {
+				return list[i].Name < list[j].Name
+			}
+			// The pool is built by ranging a map, and sort.Slice is not
+			// stable, so two same-named players tied on every other key would
+			// swap between runs. ID is unique and settles it.
+			return list[i].ID < list[j].ID
 		})
 		out[pos] = list
 	}
@@ -127,7 +133,10 @@ func ByRank(list []Player) []Player {
 		if out[i].Rank != out[j].Rank {
 			return out[i].Rank < out[j].Rank
 		}
-		return out[i].Name < out[j].Name
+		if out[i].Name != out[j].Name {
+			return out[i].Name < out[j].Name
+		}
+		return out[i].ID < out[j].ID
 	})
 	return out
 }

@@ -54,3 +54,27 @@ func TestToPlayerResolvesOptionals(t *testing.T) {
 		t.Errorf("fallback eligibility: %v", bare.Eligible)
 	}
 }
+
+func TestPointsKeyCoversUnusualScoring(t *testing.T) {
+	cases := []struct {
+		rec   float64
+		key   string
+		exact bool
+	}{
+		{1, "pts_ppr", true},
+		{0.5, "pts_half_ppr", true},
+		{0, "pts_std", true},
+		// Sleeper projects only three scoring bases, so anything else takes
+		// the nearest and is reported as approximate.
+		{1.5, "pts_ppr", false},
+		{0.75, "pts_ppr", false},
+		{0.25, "pts_half_ppr", false},
+		{0.1, "pts_std", false},
+	}
+	for _, c := range cases {
+		key, exact := pointsKey(map[string]float64{"rec": c.rec})
+		if key != c.key || exact != c.exact {
+			t.Errorf("rec %g: got %s exact=%v, want %s exact=%v", c.rec, key, exact, c.key, c.exact)
+		}
+	}
+}
