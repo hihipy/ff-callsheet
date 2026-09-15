@@ -27,7 +27,7 @@ Taxi: Rookie Wheels RB GB
 
 ## Free agents
 
-8 unrostered, 6 of them on a club depth chart and 2 on the practice squad or newly signed. Top 3 healthy per position, ordered by projected pts_ppr for this week.
+8 unrostered at positions this league fields, 6 of them on a club depth chart and 2 on the practice squad or newly signed. Top 3 healthy per position, ordered by projected pts_ppr for this week.
 
 ### QB (1 available, 1 on a depth chart)
 

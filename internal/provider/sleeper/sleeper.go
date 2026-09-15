@@ -94,6 +94,10 @@ func (p Provider) Fetch(ctx context.Context, ref callsheet.Ref, opts callsheet.O
 			playerTeam[id] = pl.Team
 		}
 		positions := callsheet.OrderedPositions(callsheet.StartablePositions(lg.RosterPositions))
+		// Projections are keyed to the NFL season, so the state endpoint is
+		// authoritative here, while the document header reports the league's
+		// own season. The two agree in season and can only diverge at a
+		// rollover, which InSeason already excludes from output.
 		proj = p.fetchProjections(ctx, sport, st.Season, st.Week, lg.ScoringSettings, positions, playerTeam)
 		out.Projected = proj.fetched
 		out.PointsKey = proj.key

@@ -110,7 +110,7 @@ func TestSlotSplitOmittedWhenProviderHasNoSignal(t *testing.T) {
 	if strings.Contains(out, "on a depth chart)") {
 		t.Error("position heading claimed a depth chart count of zero")
 	}
-	if !strings.Contains(out, "unrostered. Top 5 healthy per position") {
+	if !strings.Contains(out, "unrostered at positions this league fields. Top 5 healthy per position") {
 		t.Error("fallback header missing")
 	}
 }

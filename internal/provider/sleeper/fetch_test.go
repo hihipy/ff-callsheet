@@ -36,6 +36,10 @@ func fakeSleeper(t *testing.T, fail map[string]bool) (*httptest.Server, *int) {
 		})
 	}
 	serve("/v1/league/L1", "league.json")
+	// A second league whose scoring Sleeper does not publish a basis for.
+	serve("/v1/league/L2", "league-15ppr.json")
+	serve("/v1/league/L2/rosters", "rosters.json")
+	serve("/v1/league/L2/users", "users.json")
 	serve("/v1/league/L1/rosters", "rosters.json")
 	serve("/v1/league/L1/users", "users.json")
 	serve("/v1/state/nfl", "state.json")
@@ -279,11 +283,29 @@ func TestPoolOrderStableAcrossFetches(t *testing.T) {
 
 func TestApproximateScoringIsFlagged(t *testing.T) {
 	lg, _ := fetchFixture(t, nil)
-	// The fixture league scores 1 per reception, which Sleeper publishes.
+	// The first fixture league scores 1 per reception, which Sleeper publishes.
 	if lg.PointsApproximate {
 		t.Error("an exact scoring match was flagged as approximate")
 	}
 	if lg.PointsKey != "pts_ppr" {
 		t.Errorf("points key: %s", lg.PointsKey)
+	}
+
+	// The second scores 1.5, which it does not, so the nearest basis is used
+	// and the league has to say so all the way through to the document.
+	srv, _ := fakeSleeper(t, nil)
+	p := Provider{http: newHTTPClient(), urls: endpoints{api: srv.URL + "/v1", proj: srv.URL}, CacheDir: t.TempDir()}
+	odd, err := p.Fetch(context.Background(), callsheet.Ref{Sport: "nfl", ID: "L2"}, callsheet.Options{})
+	if err != nil {
+		t.Fatalf("fetch: %v", err)
+	}
+	if !odd.PointsApproximate {
+		t.Error("a 1.5 PPR league should be flagged as approximate")
+	}
+	if odd.PointsKey != "pts_ppr" {
+		t.Errorf("nearest basis for 1.5 PPR: got %s, want pts_ppr", odd.PointsKey)
+	}
+	if odd.Waivers.Budget != 0 {
+		t.Errorf("this league uses waiver priority, budget should be 0: %d", odd.Waivers.Budget)
 	}
 }

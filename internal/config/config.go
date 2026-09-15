@@ -74,22 +74,6 @@ func Load() (Config, error) {
 	return c, nil
 }
 
-// Save writes the profile file, creating its directory.
-func (c Config) Save() error {
-	path, err := Path()
-	if err != nil {
-		return err
-	}
-	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
-		return err
-	}
-	raw, err := json.MarshalIndent(c, "", "  ")
-	if err != nil {
-		return err
-	}
-	return os.WriteFile(path, append(raw, '\n'), 0o644)
-}
-
 // Resolve turns one command line argument into a league reference. An alias in
 // the config wins; anything else is read as a reference directly, so a stranger
 // who cloned the repo needs no config at all.

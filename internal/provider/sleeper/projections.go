@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/url"
 	"strings"
 )
 
@@ -74,8 +75,12 @@ func (p Provider) fetchProjections(ctx context.Context, sport, season string, we
 
 	var q strings.Builder
 	for _, pos := range positions {
+		// StartablePositions passes unrecognized slot names through as
+		// positions, which is what keeps an unfamiliar format working. One of
+		// those carrying a space or an ampersand would corrupt the request and
+		// surface only as the generic unavailable warning.
 		q.WriteString("&position[]=")
-		q.WriteString(pos)
+		q.WriteString(url.QueryEscape(pos))
 	}
 	url := fmt.Sprintf("%s/projections/%s/%s/%d?season_type=regular%s&order_by=%s",
 		p.urls.proj, sport, season, week, q.String(), pr.key)

@@ -139,11 +139,14 @@ func writeFreeAgents(b *bytes.Buffer, l callsheet.League, top int) {
 	// A provider whose platform exposes no roster-slot signal leaves Slotted
 	// false for everyone. Reporting "0 on a depth chart" would read as a fact
 	// about the league rather than a gap in the source, so the split is omitted.
+	// The count is of the pool after position filtering, so the label has to
+	// say so. A provider logs a wider number under the same word, and in a
+	// league with no kicker slot the two differ by every available kicker.
 	if slotted > 0 {
-		fmt.Fprintf(b, "## Free agents\n\n%d unrostered, %d of them on a club depth chart and %d on the practice squad or newly signed. Top %d healthy per position, ordered by %s.\n\n",
+		fmt.Fprintf(b, "## Free agents\n\n%d unrostered at positions this league fields, %d of them on a club depth chart and %d on the practice squad or newly signed. Top %d healthy per position, ordered by %s.\n\n",
 			total, slotted, total-slotted, top, ordering)
 	} else {
-		fmt.Fprintf(b, "## Free agents\n\n%d unrostered. Top %d healthy per position, ordered by %s.\n\n",
+		fmt.Fprintf(b, "## Free agents\n\n%d unrostered at positions this league fields. Top %d healthy per position, ordered by %s.\n\n",
 			total, top, ordering)
 	}
 

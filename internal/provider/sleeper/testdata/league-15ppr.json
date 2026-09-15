@@ -1,0 +1,9 @@
+{
+  "name": "Unusual Scoring League",
+  "season": "2026",
+  "status": "in_season",
+  "total_rosters": 2,
+  "roster_positions": ["QB", "RB", "WR", "TE", "FLEX", "SUPER_FLEX", "DEF", "BN", "BN", "IR"],
+  "settings": {"waiver_budget": 0, "waiver_type": 0, "playoff_week_start": 15},
+  "scoring_settings": {"rec": 1.5, "pass_td": 4, "pass_int": -2}
+}
