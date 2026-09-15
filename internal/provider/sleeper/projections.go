@@ -82,10 +82,10 @@ func (p Provider) fetchProjections(ctx context.Context, sport, season string, we
 		q.WriteString("&position[]=")
 		q.WriteString(url.QueryEscape(pos))
 	}
-	url := fmt.Sprintf("%s/projections/%s/%s/%d?season_type=regular%s&order_by=%s",
+	endpoint := fmt.Sprintf("%s/projections/%s/%s/%d?season_type=regular%s&order_by=%s",
 		p.urls.proj, sport, season, week, q.String(), pr.key)
 
-	raw, err := p.http.getBytes(ctx, url)
+	raw, err := p.http.getBytes(ctx, endpoint)
 	if err != nil {
 		p.logf("warning: projections unavailable, continuing without them: %v", err)
 		return pr

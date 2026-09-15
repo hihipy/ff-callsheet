@@ -1,6 +1,6 @@
 # >>> managed gitignore: begin (gitignore-forge.py) >>>
-# Generated 2026-09-15 for repo.
-# Detected stacks: go.
+# Generated 2026-09-14 20:57 for ff-callsheet.
+# Detected stacks: go, r.
 # Edits inside this block are overwritten. Put repo-specific rules below it.
 
 # --- macOS --------------------------------------------------------------------
@@ -133,6 +133,15 @@ coverage.html
 /vendor/
 # goreleaser
 dist/
+
+# --- r ------------------------------------------------------------------------
+.Rhistory
+.Rapp.history
+.RData
+.Ruserdata
+*_cache/
+/cache/
+.Rproj.user/
 
 # <<< managed gitignore: end <<<
 # --- local rules: edit freely, never overwritten -----------------------------

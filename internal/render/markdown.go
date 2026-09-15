@@ -181,10 +181,10 @@ func writeFreeAgents(b *bytes.Buffer, l callsheet.League, top int) {
 				injuredAll = append(injuredAll, p)
 			}
 		}
-		cap := top/3 + 1
+		injuredCap := top/3 + 1
 		var injured []string
 		for _, p := range callsheet.ByRank(injuredAll) {
-			if len(injured) == cap {
+			if len(injured) == injuredCap {
 				break
 			}
 			injured = append(injured, p.Name+" "+p.Team+suffix(p))
