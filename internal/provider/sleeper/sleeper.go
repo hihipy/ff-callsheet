@@ -97,6 +97,7 @@ func (p Provider) Fetch(ctx context.Context, ref callsheet.Ref, opts callsheet.O
 		proj = p.fetchProjections(ctx, sport, st.Season, st.Week, lg.ScoringSettings, positions, playerTeam)
 		out.Projected = proj.fetched
 		out.PointsKey = proj.key
+		out.PointsApproximate = proj.approx
 	}
 
 	// Rosters carry owner_id only, so manager names come from the users call.

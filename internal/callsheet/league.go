@@ -67,6 +67,11 @@ type League struct {
 	// provider may leave it empty rather than inventing a label.
 	Projected bool
 	PointsKey string
+	// PointsApproximate says the basis is the nearest the platform publishes
+	// rather than the league's actual scoring. It reaches the document, because
+	// the log does not: a reader pasting this into an assistant would otherwise
+	// see an exact-sounding claim, and -quiet removes the warning entirely.
+	PointsApproximate bool
 }
 
 // Waivers describes how a league acquires players. Budget is zero in a league

@@ -20,9 +20,12 @@ type projRow struct {
 // appear at all. A club with no rows is on bye, which is how bye weeks are
 // derived without a schedule source.
 type projections struct {
-	points  map[string]float64
-	onBye   map[string]bool
-	key     string
+	points map[string]float64
+	onBye  map[string]bool
+	key    string
+	// approx marks the key as the nearest Sleeper publishes rather than the
+	// league's own scoring.
+	approx  bool
 	fetched bool
 }
 
@@ -62,6 +65,7 @@ func (p Provider) fetchProjections(ctx context.Context, sport, season string, we
 		points: map[string]float64{},
 		onBye:  map[string]bool{},
 		key:    key,
+		approx: !exact,
 	}
 	if !exact {
 		p.logf("warning: league scores %g per reception, which Sleeper does not project; using %s as the nearest",

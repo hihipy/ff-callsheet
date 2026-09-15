@@ -247,3 +247,43 @@ func TestBenchExcludesReserveAndTaxi(t *testing.T) {
 		}
 	}
 }
+
+func TestPoolOrderStableAcrossFetches(t *testing.T) {
+	// The pool is built by ranging a map, and Go randomizes that order. This
+	// exercises the real path the ID tiebreaker exists for, which a fixed
+	// slice in a unit test cannot.
+	var first []string
+	for i := 0; i < 20; i++ {
+		lg, _ := fetchFixture(t, nil)
+		pool, order := lg.PoolByPosition()
+		var got []string
+		for _, pos := range order {
+			for _, p := range pool[pos] {
+				got = append(got, pos+":"+p.ID)
+			}
+		}
+		if i == 0 {
+			first = got
+			continue
+		}
+		if len(got) != len(first) {
+			t.Fatalf("run %d returned %d players, run 0 returned %d", i, len(got), len(first))
+		}
+		for j := range got {
+			if got[j] != first[j] {
+				t.Fatalf("run %d differs at position %d: %s, run 0 had %s", i, j, got[j], first[j])
+			}
+		}
+	}
+}
+
+func TestApproximateScoringIsFlagged(t *testing.T) {
+	lg, _ := fetchFixture(t, nil)
+	// The fixture league scores 1 per reception, which Sleeper publishes.
+	if lg.PointsApproximate {
+		t.Error("an exact scoring match was flagged as approximate")
+	}
+	if lg.PointsKey != "pts_ppr" {
+		t.Errorf("points key: %s", lg.PointsKey)
+	}
+}

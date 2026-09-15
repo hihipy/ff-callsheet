@@ -121,3 +121,18 @@ func TestSlotSplitShownWhenProviderSuppliesIt(t *testing.T) {
 		t.Error("split missing when the provider supplied it")
 	}
 }
+
+func TestApproximateScoringBasisReachesTheDocument(t *testing.T) {
+	l := sample()
+	out := Markdown(l, Options{Top: 5})
+	if strings.Contains(out, "nearest basis") {
+		t.Error("an exact basis should carry no qualifier")
+	}
+	// A league whose scoring the platform does not publish must not read as an
+	// exact claim, since the log warning never reaches whoever pastes the file.
+	l.PointsApproximate = true
+	out = Markdown(l, Options{Top: 5})
+	if !strings.Contains(out, "the nearest basis available rather than this league's exact scoring") {
+		t.Error("approximate basis not disclosed in the document")
+	}
+}

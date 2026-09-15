@@ -109,14 +109,15 @@ func TestOrderingIsDeterministicForTiedPlayers(t *testing.T) {
 			{ID: "a", Name: "Same Name", Position: "RB", Rank: UnrankedRank},
 		},
 	}
-	for i := 0; i < 50; i++ {
-		pool, _ := l.PoolByPosition()
-		if pool["RB"][0].ID != "a" {
-			t.Fatalf("run %d put %s first", i, pool["RB"][0].ID)
-		}
-		ranked := ByRank(l.Pool)
-		if ranked[0].ID != "a" {
-			t.Fatalf("ByRank run %d put %s first", i, ranked[0].ID)
-		}
+	// One pass is the whole proof here: the input is a fixed slice, so the
+	// comparator either breaks the tie or it does not. The map-iteration
+	// randomness that motivated the ID tiebreaker lives in the provider, and
+	// is covered there.
+	pool, _ := l.PoolByPosition()
+	if pool["RB"][0].ID != "a" {
+		t.Errorf("PoolByPosition put %s first", pool["RB"][0].ID)
+	}
+	if ranked := ByRank(l.Pool); ranked[0].ID != "a" {
+		t.Errorf("ByRank put %s first", ranked[0].ID)
 	}
 }

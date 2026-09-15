@@ -129,6 +129,12 @@ func writeFreeAgents(b *bytes.Buffer, l callsheet.League, top int) {
 	ordering := "preseason rank"
 	if l.Projected {
 		ordering = "projected " + l.PointsKey + " for this week"
+		if l.PointsApproximate {
+			// The platform does not publish a basis matching this league's
+			// scoring, and a reader handing the file to an assistant should
+			// not read the number as exact.
+			ordering += ", the nearest basis available rather than this league's exact scoring"
+		}
 	}
 	// A provider whose platform exposes no roster-slot signal leaves Slotted
 	// false for everyone. Reporting "0 on a depth chart" would read as a fact
