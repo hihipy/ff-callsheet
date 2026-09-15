@@ -92,7 +92,84 @@ The config file is optional. Everything works with a bare league ID, so nothing 
 
 ### Running It Every Week
 
-The tool knows when the season is on. Outside the regular season and playoffs it writes nothing and exits quietly, so a scheduled job is safe to leave running all year. Point a weekly cron job or scheduled task at it and it will start producing files again in September on its own.
+The tool knows when the season is on. Outside the regular season and playoffs it writes nothing and exits quietly, so a scheduled job is safe to leave in place all year and will start producing files again in September on its own.
+
+Tuesday morning is the time worth picking. Waivers process overnight into Wednesday on most leagues, so a Tuesday file shows you the pool while you can still bid on it. A Wednesday file only tells you what everyone else already claimed.
+
+Build the binary somewhere stable first, outside the repo folder, so rebuilding or switching branches cannot break the schedule.
+
+**macOS**
+
+Save this as `~/Library/LaunchAgents/callsheet.weekly.plist`, with your own paths in it:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>callsheet.weekly</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/Users/you/bin/callsheet</string>
+		<string>-out</string>
+		<string>/Users/you/Documents/callsheets</string>
+	</array>
+	<key>StartCalendarInterval</key>
+	<dict>
+		<key>Weekday</key><integer>2</integer>
+		<key>Hour</key><integer>8</integer>
+		<key>Minute</key><integer>0</integer>
+	</dict>
+	<key>StandardOutPath</key>
+	<string>/Users/you/Library/Logs/callsheet.log</string>
+	<key>StandardErrorPath</key>
+	<string>/Users/you/Library/Logs/callsheet.log</string>
+</dict>
+</plist>
+```
+
+Then load it, and run it once to check:
+
+```bash
+launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/callsheet.weekly.plist
+launchctl kickstart -p gui/$(id -u)/callsheet.weekly
+tail ~/Library/Logs/callsheet.log
+```
+
+If `bootstrap` fails with an input/output error, the file is quarantined because it came from a browser download. macOS will not load a quarantined job:
+
+```bash
+xattr -d com.apple.quarantine ~/Library/LaunchAgents/callsheet.weekly.plist
+```
+
+If the machine is asleep at eight, the job runs when it wakes rather than skipping the week. To remove it, run `launchctl bootout gui/$(id -u)/callsheet.weekly`.
+
+**Linux**
+
+One line in your crontab, via `crontab -e`:
+
+```
+0 8 * * 2 /home/you/bin/callsheet -out /home/you/callsheets >> /home/you/callsheet.log 2>&1
+```
+
+The `2` is Tuesday. Cron gives the job almost no environment, so every path has to be absolute.
+
+**Windows**
+
+Task Scheduler, from PowerShell as your own user:
+
+```powershell
+$action = New-ScheduledTaskAction -Execute "C:\Tools\callsheet.exe" -Argument '-out "C:\Users\you\Documents\callsheets"'
+$trigger = New-ScheduledTaskTrigger -Weekly -DaysOfWeek Tuesday -At 8am
+Register-ScheduledTask -TaskName "Callsheet Weekly" -Action $action -Trigger $trigger
+```
+
+Run it once by hand to confirm before trusting the schedule:
+
+```powershell
+Start-ScheduledTask -TaskName "Callsheet Weekly"
+```
 
 ---
 
