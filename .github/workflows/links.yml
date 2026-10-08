@@ -31,11 +31,17 @@ jobs:
           # the success codes have to be listed alongside 403 and 429. Those two
           # are bot blocks rather than dead links, and keeping them accepted
           # means a genuinely broken link still fails the run.
+          # Some hosts answer GitHub's runners slowly (the Creative Commons wiki
+          # linked from every LICENSE.md), so the run waits and retries before
+          # calling a link dead. A link that never answers still fails.
           args: >-
             --no-progress
             --cache
             --max-cache-age 1d
             --accept 100..=103,200..=299,403,429
+            --timeout 30
+            --max-retries 5
+            --retry-wait-time 5
             --exclude-path .git
             .
           fail: true
