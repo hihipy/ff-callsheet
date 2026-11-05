@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/hihipy/ff-callsheet/internal/callsheet"
 )
@@ -58,6 +59,9 @@ func fetchFixture(t *testing.T, fail map[string]bool) (callsheet.League, *int) {
 		http:     newHTTPClient(),
 		urls:     endpoints{api: srv.URL + "/v1", proj: srv.URL},
 		CacheDir: t.TempDir(),
+		// Pinned to the day the fixtures were pulled, so a fixture's recent
+		// news stays recent however long after that the suite runs.
+		nowFunc: func() time.Time { return now },
 	}
 	lg, err := p.Fetch(context.Background(), callsheet.Ref{Platform: "sleeper", Sport: "nfl", ID: "L1"}, callsheet.Options{})
 	if err != nil {

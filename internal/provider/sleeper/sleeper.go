@@ -19,6 +19,10 @@ type Provider struct {
 	// CacheDir overrides where the player map is cached. Empty uses the
 	// user cache directory, which is what a real run wants.
 	CacheDir string
+	// nowFunc replaces the clock that judges news freshness. Nil means the
+	// wall clock. Tests pin it so fixture timestamps never age out of the
+	// window.
+	nowFunc func() time.Time
 }
 
 // New returns a Provider writing diagnostics to log, which may be nil.
@@ -27,6 +31,13 @@ func New(log io.Writer) Provider {
 }
 
 func (p Provider) Name() string { return "sleeper" }
+
+func (p Provider) now() time.Time {
+	if p.nowFunc != nil {
+		return p.nowFunc()
+	}
+	return time.Now()
+}
 
 func (p Provider) logf(format string, args ...any) {
 	if p.Log == nil {
@@ -156,7 +167,7 @@ func (p Provider) Fetch(ctx context.Context, ref callsheet.Ref, opts callsheet.O
 		})
 	}
 
-	now := time.Now()
+	now := p.now()
 	var slotted, dropped int
 	for id, pl := range players {
 		if rostered[id] {
